@@ -2,4 +2,4 @@
 extra_agent_args: ""
 group_name_master: master
 systemd_dir: /etc/systemd/system
-k3s_agent_service_name: k3s-node
+k3s_agent_service_name: k3s-agent
