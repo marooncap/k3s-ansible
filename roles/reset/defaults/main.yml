@@ -1,2 +1,4 @@
 ---
 systemd_dir: /etc/systemd/system
+k3s_agent_service_name: k3s-node
+k3s_service_name: k3s

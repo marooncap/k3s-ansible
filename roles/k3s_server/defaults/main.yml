@@ -38,3 +38,4 @@ server_init_args: >-
   {{ extra_server_args }}
 
 systemd_dir: /etc/systemd/system
+k3s_service_name: k3s
