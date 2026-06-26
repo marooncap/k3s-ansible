@@ -15,7 +15,7 @@ k3s_agent_service_name: k3s-node
 system_timezone: Your/Timezone
 
 # Delete the default manifests that come with k3s
-k3s_remove_bootstrap_manifests: true
+cleanup_k3s_bootstrap_manifests: true
 
 # interface which will be used for flannel
 flannel_iface: eth0

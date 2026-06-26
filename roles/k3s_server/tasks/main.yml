@@ -28,7 +28,7 @@
 - name: Deploy metallb manifest
   ansible.builtin.include_tasks: metallb.yml
   tags: metallb
-  when: metal_lb_enabled and kube_vip_lb_ip_range is not defined and (not cilium_bgp or cilium_iface is not defined)
+  when: metal_lb_enabled and (kube_vip_lb_ip_range is not defined and (not cilium_bgp or cilium_iface is not defined))
 
 - name: Deploy kube-vip manifest
   ansible.builtin.include_tasks: kube-vip.yml
@@ -156,14 +156,14 @@
     paths: /var/lib/rancher/k3s/server/manifests
     file_type: file
   register: k3s_server_manifests
-  when: k3s_remove_bootstrap_manifests | default(false) | bool
+  when: cleanup_k3s_bootstrap_manifests | default(false) | bool
 
 - name: Get sub dirs of manifests folder
   ansible.builtin.find:
     paths: /var/lib/rancher/k3s/server/manifests
     file_type: directory
   register: k3s_server_manifests_directories
-  when: k3s_remove_bootstrap_manifests | default(false) | bool
+  when: cleanup_k3s_bootstrap_manifests | default(false) | bool
 
 - name: Remove manifests and folders that are only needed for bootstrapping cluster so k3s doesn't auto apply on start
   ansible.builtin.file:
@@ -174,4 +174,4 @@
     - "{{ k3s_server_manifests_directories.files }}"
   loop_control:
     label: "{{ item.path }}"
-  when: k3s_remove_bootstrap_manifests | default(false) | bool
+  when: cleanup_k3s_bootstrap_manifests | default(false) | bool
