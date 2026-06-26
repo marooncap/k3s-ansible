@@ -4,17 +4,31 @@ k3s_version: v1.34.2+k3s1
 ansible_user: ansibleuser
 systemd_dir: /etc/systemd/system
 
+# k3s service names
+# k3s(and this role) defaults to k3s
+k3s_service_name: k3s
+# k3s(and this role) defaults to k3s-agent. Previous versions of this role
+# used k3s-node so this variable is here for backwards compatibility
+k3s_agent_service_name: k3s-node
+
 # Set your timezone
 system_timezone: Your/Timezone
+
+# Delete the default manifests that come with k3s
+k3s_remove_bootstrap_manifests: true
 
 # interface which will be used for flannel
 flannel_iface: eth0
 
+# Enable calico for cni
+calico_enabled: true
 # uncomment calico_iface to use tigera operator/calico cni instead of flannel https://docs.tigera.io/calico/latest/about
 # calico_iface: "eth0"
 calico_ebpf: false # use eBPF dataplane instead of iptables
 calico_tag: v3.31.0 # calico version tag
 
+# Enable cilium for cni
+cilium_enabled: true
 # uncomment cilium_iface to use cilium cni instead of flannel or calico
 # ensure v4.19.57, v5.1.16, v5.2.0 or more recent kernel
 # cilium_iface: "eth0"
@@ -33,6 +47,9 @@ cilium_bgp_my_asn: "64513"
 cilium_bgp_peer_asn: "64512"
 cilium_bgp_peer_address: 192.168.30.1
 cilium_bgp_lb_cidr: 192.168.31.0/24 # cidr for cilium loadbalancer ipam
+
+# enable kube-vip for load balancing services
+kube_vip_enabled: false
 
 # enable kube-vip ARP broadcasts
 kube_vip_arp: true
@@ -92,6 +109,9 @@ kube_vip_tag_version: v0.8.2
 # kube-vip ip range for load balancer
 # (uncomment to use kube-vip for services instead of MetalLB)
 # kube_vip_lb_ip_range: "192.168.30.80-192.168.30.90"
+
+# Enable MetalLB for load balancing services
+metal_lb_enabled: true
 
 # metallb type frr or native
 metal_lb_type: native
