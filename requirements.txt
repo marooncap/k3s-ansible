@@ -4,17 +4,24 @@
 #
 #    pip-compile requirements.in
 #
-ansible-compat==4.1.11
-    # via molecule
-ansible-core==2.16.2
+ansible-compat==26.6.0
+    # via
+    #   ansible-lint
+    #   molecule
+ansible-core==2.17.14
     # via
     #   -r requirements.in
     #   ansible-compat
+    #   ansible-lint
     #   molecule
+ansible-lint==26.6.0
+    # via -r requirements.in
 attrs==23.2.0
     # via
     #   jsonschema
     #   referencing
+black==26.5.1
+    # via ansible-lint
 bracex==2.4
     # via wcmatch
 cachetools==5.3.2
@@ -24,25 +31,34 @@ certifi==2023.11.17
     #   kubernetes
     #   requests
 cffi==1.16.0
-    # via cryptography
+    # via
+    #   ansible-lint
+    #   cryptography
 cfgv==3.4.0
     # via pre-commit
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via
+    #   black
     #   click-help-colors
     #   molecule
 click-help-colors==0.9.4
     # via molecule
 cryptography==41.0.7
-    # via ansible-core
+    # via
+    #   ansible-core
+    #   ansible-lint
 distlib==0.3.8
     # via virtualenv
+distro==1.9.0
+    # via ansible-lint
 enrich==1.2.7
     # via molecule
 filelock==3.13.1
-    # via virtualenv
+    # via
+    #   ansible-lint
+    #   virtualenv
 google-auth==2.26.2
     # via kubernetes
 identify==2.5.33
@@ -62,6 +78,7 @@ jsonpointer==2.4
 jsonschema==4.21.1
     # via
     #   ansible-compat
+    #   ansible-lint
     #   molecule
 jsonschema-specifications==2023.12.1
     # via jsonschema
@@ -79,6 +96,8 @@ molecule==6.0.3
     #   molecule-plugins
 molecule-plugins[vagrant]==23.5.3
     # via -r requirements.in
+mypy-extensions==1.1.0
+    # via black
 netaddr==0.10.1
     # via -r requirements.in
 nodeenv==1.8.0
@@ -91,9 +110,18 @@ packaging==23.2
     # via
     #   ansible-compat
     #   ansible-core
+    #   ansible-lint
+    #   black
     #   molecule
+pathspec==1.1.1
+    # via
+    #   ansible-lint
+    #   black
+    #   yamllint
 platformdirs==4.1.0
-    # via virtualenv
+    # via
+    #   black
+    #   virtualenv
 pluggy==1.3.0
     # via molecule
 pre-commit==3.8.0
@@ -114,16 +142,21 @@ python-dateutil==2.8.2
     # via kubernetes
 python-vagrant==1.0.0
     # via molecule-plugins
+pytokens==0.4.1
+    # via black
 pyyaml==6.0.2
     # via
     #   -r requirements.in
     #   ansible-compat
     #   ansible-core
+    #   ansible-lint
     #   kubernetes
     #   molecule
     #   pre-commit
-referencing==0.32.1
+    #   yamllint
+referencing==0.37.0
     # via
+    #   ansible-lint
     #   jsonschema
     #   jsonschema-specifications
 requests==2.31.0
@@ -144,16 +177,28 @@ rpds-py==0.17.1
     #   referencing
 rsa==4.9
     # via google-auth
-ruamel-yaml==0.18.5
-    # via pre-commit-hooks
-ruamel-yaml-clib==0.2.8
-    # via ruamel-yaml
+ruamel-yaml==0.19.1
+    # via
+    #   ansible-lint
+    #   pre-commit-hooks
+ruamel-yaml-clib==0.2.15
+    # via ansible-lint
 six==1.16.0
     # via
     #   kubernetes
     #   python-dateutil
 subprocess-tee==0.4.1
-    # via ansible-compat
+    # via
+    #   ansible-compat
+    #   ansible-lint
+tomli==2.4.1
+    # via
+    #   black
+    #   pre-commit-hooks
+typing-extensions==4.16.0
+    # via
+    #   black
+    #   referencing
 urllib3==2.1.0
     # via
     #   kubernetes
@@ -161,9 +206,13 @@ urllib3==2.1.0
 virtualenv==20.25.0
     # via pre-commit
 wcmatch==8.5
-    # via molecule
+    # via
+    #   ansible-lint
+    #   molecule
 websocket-client==1.7.0
     # via kubernetes
+yamllint==1.38.0
+    # via ansible-lint
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
