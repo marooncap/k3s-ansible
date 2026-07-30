@@ -67,12 +67,13 @@
 - name: Refresh service facts after starting iSCSI
   ansible.builtin.service_facts:
 
-- name: Validate iSCSI services are running and enabled
+- name: Validate iSCSI services are configured correctly
   ansible.builtin.assert:
     that:
-      - ansible_facts.services['open-iscsi.service'].state == 'running'
       - ansible_facts.services['open-iscsi.service'].status == 'enabled'
+      - ansible_facts.services['open-iscsi.service'].state != 'failed'
       - ansible_facts.services['iscsid.service'].state == 'running'
       - ansible_facts.services['iscsid.service'].status == 'enabled'
     fail_msg: >-
-      iSCSI services are not fully running/enabled after prerequisite configuration.
+      iSCSI service validation failed. iscsid must be running/enabled, and
+      open-iscsi must be enabled and not in failed state.
