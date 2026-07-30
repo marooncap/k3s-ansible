@@ -1,0 +1,78 @@
+---
+- name: Validate Longhorn prereqs are running
+  ansible.builtin.assert:
+    that:
+      - ansible_distribution in longhorn_prereq_supported_distributions
+    fail_msg: >-
+      Longhorn prerequisites currently support only Debian/Ubuntu nodes.
+      Found ansible_distribution={{ ansible_distribution }}.
+
+- name: Check kernel config exists for the running kernel
+  ansible.builtin.stat:
+    path: "/boot/config-{{ ansible_kernel }}"
+  register: longhorn_kernel_config
+
+- name: Validate kernel config file is present
+  ansible.builtin.assert:
+    that:
+      - longhorn_kernel_config.stat.exists
+    fail_msg: >-
+      Missing /boot/config-{{ ansible_kernel }}; cannot validate NFSv4 kernel support
+      required for Longhorn prerequisites.
+
+- name: Validate NFSv4 kernel flags are enabled
+  ansible.builtin.command:
+    cmd: "grep -E '^{{ item }}=(y|m)$' /boot/config-{{ ansible_kernel }}"
+  register: longhorn_nfs_flags
+  changed_when: false
+  loop: "{{ longhorn_prereq_nfs_kernel_flags }}"
+
+- name: Install Longhorn prerequisite packages
+  ansible.builtin.apt:
+    name: "{{ longhorn_prereq_packages }}"
+    state: present
+    update_cache: true
+
+- name: Load iscsi_tcp kernel module
+  community.general.modprobe:
+    name: iscsi_tcp
+    state: present
+
+- name: Ensure iscsi_tcp loads on boot
+  ansible.builtin.copy:
+    content: iscsi_tcp
+    dest: /etc/modules-load.d/iscsi_tcp.conf
+    mode: u=rw,g=,o=
+
+- name: Collect service facts
+  ansible.builtin.service_facts:
+
+- name: Validate iSCSI services are available
+  ansible.builtin.assert:
+    that:
+      - "'open-iscsi.service' in ansible_facts.services"
+      - "'iscsid.service' in ansible_facts.services"
+    fail_msg: >-
+      Expected open-iscsi.service and iscsid.service to exist after installing open-iscsi.
+
+- name: Ensure iSCSI services are enabled and started
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop:
+    - iscsid
+    - open-iscsi
+
+- name: Refresh service facts after starting iSCSI
+  ansible.builtin.service_facts:
+
+- name: Validate iSCSI services are running and enabled
+  ansible.builtin.assert:
+    that:
+      - ansible_facts.services['open-iscsi.service'].state == 'running'
+      - ansible_facts.services['open-iscsi.service'].status == 'enabled'
+      - ansible_facts.services['iscsid.service'].state == 'running'
+      - ansible_facts.services['iscsid.service'].status == 'enabled'
+    fail_msg: >-
+      iSCSI services are not fully running/enabled after prerequisite configuration.
