@@ -171,3 +171,4 @@
     - "{{ k3s_server_manifests_directories.files }}"
   loop_control:
     label: "{{ item.path }}"
+  when: cleanup_k3s_bootstrap_manifests | default(false) | bool
