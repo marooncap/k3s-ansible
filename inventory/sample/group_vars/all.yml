@@ -110,6 +110,12 @@ kube_vip_tag_version: v0.8.2
 # (uncomment to use kube-vip for services instead of MetalLB)
 # kube_vip_lb_ip_range: "192.168.30.80-192.168.30.90"
 
+# Enable longhorn for persistent volumes
+longhorn_enabled: false
+
+# tag for longhorn manager manifest
+# longhorn_manager_tag_version: "master"
+
 # Enable MetalLB for load balancing services
 metal_lb_enabled: true
 

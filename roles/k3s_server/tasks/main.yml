@@ -25,6 +25,10 @@
 - name: Deploy vip manifest
   ansible.builtin.include_tasks: vip.yml
   when: kube_vip_enabled
+- name: Deploy longhorn manifest
+  ansible.builtin.include_tasks: longhorn.yml
+  tags: longhorn
+  when: longhorn_enabled
 - name: Deploy metallb manifest
   ansible.builtin.include_tasks: metallb.yml
   tags: metallb

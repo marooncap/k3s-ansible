@@ -20,6 +20,9 @@ kube_vip_bgp_peeras: "64512"
 kube_vip_bgp_peers: []
 kube_vip_bgp_peers_groups: ['k3s_master']
 
+longhorn_enabled: false
+longhorn_manager_tag_version: master
+
 metal_lb_enabled: false
 metal_lb_controller_tag_version: v0.14.3
 metal_lb_speaker_tag_version: v0.14.3
