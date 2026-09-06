@@ -24,15 +24,20 @@
 
 - name: Deploy vip manifest
   ansible.builtin.include_tasks: vip.yml
+  when: kube_vip_enabled
+- name: Deploy longhorn manifest
+  ansible.builtin.include_tasks: longhorn.yml
+  tags: longhorn
+  when: longhorn_enabled
 - name: Deploy metallb manifest
   ansible.builtin.include_tasks: metallb.yml
   tags: metallb
-  when: kube_vip_lb_ip_range is not defined and (not cilium_bgp or cilium_iface is not defined)
+  when: metal_lb_enabled and (kube_vip_lb_ip_range is not defined and (not cilium_bgp or cilium_iface is not defined))
 
 - name: Deploy kube-vip manifest
   ansible.builtin.include_tasks: kube-vip.yml
   tags: kubevip
-  when: kube_vip_lb_ip_range is defined
+  when: kube_vip_enabled and kube_vip_lb_ip_range is defined
 
 - name: Init cluster inside the transient k3s-init service
   ansible.builtin.command:
@@ -67,14 +72,14 @@
   register: k3s_service
   ansible.builtin.template:
     src: k3s.service.j2
-    dest: "{{ systemd_dir }}/k3s.service"
+    dest: "{{ systemd_dir }}/{{ k3s_service_name }}.service"
     owner: root
     group: root
     mode: "0644"
 
 - name: Enable and check K3s service
   ansible.builtin.systemd:
-    name: k3s
+    name: "{{ k3s_service_name }}"
     daemon_reload: true
     state: restarted
     enabled: true
@@ -155,12 +160,14 @@
     paths: /var/lib/rancher/k3s/server/manifests
     file_type: file
   register: k3s_server_manifests
+  when: cleanup_k3s_bootstrap_manifests | default(false) | bool
 
 - name: Get sub dirs of manifests folder
   ansible.builtin.find:
     paths: /var/lib/rancher/k3s/server/manifests
     file_type: directory
   register: k3s_server_manifests_directories
+  when: cleanup_k3s_bootstrap_manifests | default(false) | bool
 
 - name: Remove manifests and folders that are only needed for bootstrapping cluster so k3s doesn't auto apply on start
   ansible.builtin.file:

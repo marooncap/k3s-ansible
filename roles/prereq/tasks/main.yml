@@ -67,3 +67,8 @@
     path: /etc/sudoers
     validate: visudo -cf %s
   when: ansible_os_family in [ "RedHat", "Suse" ]
+
+- name: Configure Longhorn host prerequisites
+  ansible.builtin.include_tasks: longhorn.yml
+  when: longhorn_enabled | default(false) | bool
+  tags: longhorn
