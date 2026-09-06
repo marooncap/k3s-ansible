@@ -1,0 +1,6 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "ansible.python.activationScript": "venv/bin/activate",
+    "ansible.python.interpreterPath": "venv/bin/python",
+    "ansible.ansible.path": "venv/bin/ansible",
+}

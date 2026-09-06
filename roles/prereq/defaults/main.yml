@@ -2,3 +2,18 @@
 secure_path:
   RedHat: /sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin
   Suse: /usr/sbin:/usr/bin:/sbin:/bin:/usr/local/bin
+
+longhorn_prereq_supported_distributions:
+  - Debian
+  - Ubuntu
+
+longhorn_prereq_nfs_kernel_flags:
+  - CONFIG_NFS_V4
+  - CONFIG_NFS_V4_1
+  - CONFIG_NFS_V4_2
+
+longhorn_prereq_packages:
+  - nfs-common
+  - cryptsetup
+  - dmsetup
+  - open-iscsi

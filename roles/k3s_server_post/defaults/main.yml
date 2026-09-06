@@ -4,6 +4,7 @@ k3s_kubectl_binary: k3s kubectl
 bpf_lb_algorithm: maglev
 bpf_lb_mode: hybrid
 
+calico_enabled: false
 calico_blockSize: 26  # noqa var-naming
 calico_ebpf: false
 calico_encapsulation: VXLANCrossSubnet
@@ -11,6 +12,7 @@ calico_natOutgoing: Enabled  # noqa var-naming
 calico_nodeSelector: all()  # noqa var-naming
 calico_tag: v3.27.2
 
+cilium_enabled: false
 cilium_bgp: false
 cilium_exportPodCIDR: true  # noqa var-naming
 cilium_bgp_my_asn: 64513
@@ -26,6 +28,7 @@ enable_bpf_masquerade: true
 kube_proxy_replacement: true
 group_name_master: master
 
+metal_lb_enabled: false
 metal_lb_mode: layer2
 metal_lb_available_timeout: 240s
 metal_lb_controller_tag_version: v0.14.3
