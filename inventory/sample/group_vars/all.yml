@@ -116,6 +116,49 @@ longhorn_enabled: false
 # tag for longhorn manager manifest
 # longhorn_manager_tag_version: "master"
 
+# Arbitrary kustomize patches applied to the downloaded longhorn.yaml manifest before
+# it's deployed, so you're not limited to any one setting. Each item follows kustomize's
+# own "patches" schema (a `target` selector plus either a strategic-merge or JSON6902
+# `patch`). See https://kubectl.docs.kubernetes.io/references/kustomize/kustomization/patches/
+# longhorn_kustomize_patches:
+#   # global default settings (see https://longhorn.io/docs/latest/references/settings/)
+#   - target:
+#       kind: ConfigMap
+#       name: longhorn-default-setting
+#     patch: |-
+#       apiVersion: v1
+#       kind: ConfigMap
+#       metadata:
+#         name: longhorn-default-setting
+#         namespace: longhorn-system
+#       data:
+#         default-setting.yaml: |
+#           default-replica-count: "1"
+#   # the replica count on the bundled default StorageClass, which otherwise overrides
+#   # the setting above for volumes created through it
+#   - target:
+#       kind: ConfigMap
+#       name: longhorn-storageclass
+#     patch: |-
+#       - op: replace
+#         path: /data/storageclass.yaml
+#         value: |
+#           kind: StorageClass
+#           apiVersion: storage.k8s.io/v1
+#           metadata:
+#             name: longhorn
+#             annotations:
+#               storageclass.kubernetes.io/is-default-class: "true"
+#           provisioner: driver.longhorn.io
+#           allowVolumeExpansion: true
+#           reclaimPolicy: "Delete"
+#           volumeBindingMode: Immediate
+#           parameters:
+#             numberOfReplicas: "1"
+#             staleReplicaTimeout: "30"
+#             fromBackup: ""
+#             fsType: "ext4"
+
 # Enable MetalLB for load balancing services
 metal_lb_enabled: true
 
