@@ -1,0 +1,4 @@
+resources:
+  - longhorn.yaml
+patches:
+{{ longhorn_kustomize_patches | to_nice_yaml(indent=2) }}

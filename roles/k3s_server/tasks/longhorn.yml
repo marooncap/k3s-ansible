@@ -16,3 +16,49 @@
     group: root
     mode: "0644"
   when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
+
+- name: Apply custom kustomize patches to the longhorn manifest
+  when:
+    - ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
+    - longhorn_kustomize_patches | length > 0
+  block:
+    - name: Create longhorn kustomize working directory
+      ansible.builtin.file:
+        path: /var/lib/rancher/k3s/server/longhorn-kustomize
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Copy downloaded longhorn manifest into kustomize working directory
+      ansible.builtin.copy:
+        src: /var/lib/rancher/k3s/server/manifests/longhorn.yaml
+        dest: /var/lib/rancher/k3s/server/longhorn-kustomize/longhorn.yaml
+        remote_src: true
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Write kustomization.yaml for longhorn
+      ansible.builtin.template:
+        src: longhorn-kustomization.yaml.j2
+        dest: /var/lib/rancher/k3s/server/longhorn-kustomize/kustomization.yaml
+        owner: root
+        group: root
+        mode: "0644"
+
+    - name: Render longhorn manifest through kustomize
+      ansible.builtin.command:
+        cmd: >-
+          {{ k3s_kubectl_binary | default('k3s kubectl') }} kustomize
+          /var/lib/rancher/k3s/server/longhorn-kustomize
+      register: longhorn_kustomize_render
+      changed_when: false
+
+    - name: Write patched longhorn manifest
+      ansible.builtin.copy:
+        content: "{{ longhorn_kustomize_render.stdout }}"
+        dest: /var/lib/rancher/k3s/server/manifests/longhorn.yaml
+        owner: root
+        group: root
+        mode: "0644"
