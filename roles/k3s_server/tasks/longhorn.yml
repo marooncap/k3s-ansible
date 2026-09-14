@@ -29,6 +29,7 @@
         owner: root
         group: root
         mode: "0755"
+      check_mode: false
 
     - name: Copy downloaded longhorn manifest into kustomize working directory
       ansible.builtin.copy:
@@ -38,6 +39,7 @@
         owner: root
         group: root
         mode: "0644"
+      check_mode: false
 
     - name: Write kustomization.yaml for longhorn
       ansible.builtin.template:
@@ -46,6 +48,7 @@
         owner: root
         group: root
         mode: "0644"
+      check_mode: false
 
     - name: Render longhorn manifest through kustomize
       ansible.builtin.command:
@@ -54,6 +57,7 @@
           /var/lib/rancher/k3s/server/longhorn-kustomize
       register: longhorn_kustomize_render
       changed_when: false
+      check_mode: false
 
     - name: Write patched longhorn manifest
       ansible.builtin.copy:
