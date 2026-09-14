@@ -5,7 +5,7 @@ on:
 jobs:
   pre-commit-ci:
     name: Pre-Commit
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       PYTHON_VERSION: "3.11"
 
@@ -42,7 +42,7 @@ jobs:
 
   ensure-pinned-actions:
     name: Ensure SHA Pinned Actions
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
