@@ -7,7 +7,7 @@ See [this issue](https://github.com/timothystewart6/k3s-ansible/issues/667) for 
 - All playbooks have been modified to reflect this and are working.
 - Small disclaimer: the original playbook was tested for Debian, Ubuntu and Rocky. I use Ubuntu 24.04 / 26.04 usually, but it works with Rocky 10, Alma 10 and Debian 13. If you're using (minimal) cloud-init style images for Rocky 10 and Alma 10 you'll need to install extra kernel modules; you can do so by running `sudo dnf install -y kernel-modules kernel-modules-extra` followed by `sudo reboot` and `sudo modprobe br_netfilter` before running the whole playbook. More about that can be found on [this page](https://forums.rockylinux.org/t/docker-installation-failed-on-rhel-10/20024).
 
-See the [readme](https://github.com/timothystewart6/k3s-ansible/blob/master/README.md) in the original repo for more information.
+See the [readme](https://github.com/marooncap/k3s-ansible/blob/master/README.md) in the original repo for more information.
 
 # Branches
 There is another branch with an added feature of deploying Longhorn in your cluster as part of the playbook, which can be convenient. You can check it out [here](https://github.com/panoptikoe/k3s-ansible/tree/longhorn).
