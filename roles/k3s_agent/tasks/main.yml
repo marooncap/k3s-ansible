@@ -27,10 +27,11 @@
     owner: root
     group: root
     mode: "0755"
+  notify: Restart k3s agent
 
 - name: Manage k3s service
   ansible.builtin.systemd:
     name: "{{ k3s_agent_service_name }}"
     daemon_reload: true
-    state: restarted
+    state: started
     enabled: true

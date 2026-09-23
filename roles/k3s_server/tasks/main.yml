@@ -76,12 +76,13 @@
     owner: root
     group: root
     mode: "0644"
+  notify: Restart k3s server
 
 - name: Enable and check K3s service
   ansible.builtin.systemd:
     name: "{{ k3s_service_name }}"
     daemon_reload: true
-    state: restarted
+    state: started
     enabled: true
 
 - name: Wait for node-token
