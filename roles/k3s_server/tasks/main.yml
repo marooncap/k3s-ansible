@@ -5,12 +5,18 @@
     state: stopped
   failed_when: false
 
+- name: Check whether k3s server is initialized
+  ansible.builtin.stat:
+    path: /var/lib/rancher/k3s/server/node-token
+  register: k3s_server_token
+
 # k3s-init won't work if the port is already in use
 - name: Stop k3s
   ansible.builtin.systemd:
     name: k3s
     state: stopped
   failed_when: false
+  when: not k3s_server_token.stat.exists
 
 - name: Clean previous runs of k3s-init # noqa command-instead-of-module
   # The systemd module does not support "reset-failed", so we need to resort to command.
@@ -43,9 +49,12 @@
   ansible.builtin.command:
     cmd: systemd-run -p RestartSec=2 -p Restart=on-failure --unit=k3s-init k3s server {{ server_init_args }}
     creates: "{{ systemd_dir }}/k3s-init.service"
+  when: not k3s_server_token.stat.exists
 
 - name: Verification
-  when: not ansible_check_mode
+  when:
+    - not ansible_check_mode
+    - not k3s_server_token.stat.exists
   block:
     - name: Verify that all nodes actually joined (check k3s-init.service if this fails)
       ansible.builtin.command:
@@ -58,7 +67,9 @@
   always:
     - name: Save logs of k3s-init.service
       ansible.builtin.include_tasks: fetch_k3s_init_logs.yml
-      when: log_destination
+      when:
+        - log_destination
+        - not k3s_server_token.stat.exists
       vars:
         log_destination: >-
           {{ lookup('ansible.builtin.env', 'ANSIBLE_K3S_LOG_DIR', default=False) }}
@@ -67,9 +78,9 @@
         name: k3s-init
         state: stopped
       failed_when: false
+      when: not k3s_server_token.stat.exists
 
 - name: Copy K3s service file
-  register: k3s_service
   ansible.builtin.template:
     src: k3s.service.j2
     dest: "{{ systemd_dir }}/{{ k3s_service_name }}.service"
@@ -84,6 +95,9 @@
     daemon_reload: true
     state: started
     enabled: true
+
+- name: Apply any pending K3s server restart
+  ansible.builtin.meta: flush_handlers
 
 - name: Wait for node-token
   ansible.builtin.wait_for:
@@ -128,11 +142,20 @@
     owner: "{{ ansible_user_id }}"
     mode: u=rw,g=,o=
 
+- name: Read current kubectl cluster endpoint
+  ansible.builtin.command: >-
+    {{ k3s_kubectl_binary | default('k3s kubectl') }} config view
+    --kubeconfig {{ ansible_user_dir }}/.kube/config
+    -o jsonpath='{.clusters[?(@.name=="default")].cluster.server}'
+  register: kubectl_cluster
+  changed_when: false
+
 - name: Configure kubectl cluster to {{ endpoint_url }}
   ansible.builtin.command: >-
     {{ k3s_kubectl_binary | default('k3s kubectl') }} config set-cluster default
       --server={{ endpoint_url }}
       --kubeconfig {{ ansible_user_dir }}/.kube/config
+  when: kubectl_cluster.stdout != endpoint_url
   changed_when: true
   vars:
     endpoint_url: >-

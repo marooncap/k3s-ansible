@@ -35,3 +35,6 @@
     daemon_reload: true
     state: started
     enabled: true
+
+- name: Apply any pending K3s agent restart
+  ansible.builtin.meta: flush_handlers
