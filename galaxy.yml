@@ -12,14 +12,12 @@ license:
   - Apache-2.0
 tags:
   - etcd
-  - high-availability
   - k8s
   - k3s
-  - k3s-cluster
-  - kube-vip
   - kubernetes
   - metallb
   - rancher
+  - infrastructure
 dependencies:
   ansible.utils: '*'
   ansible.posix: '*'
