@@ -1,6 +1,6 @@
 namespace: marooncap
 name: k3s_ansible
-version: 1.4.1
+version: 1.4.2
 readme: README.md
 authors:
   - your name <example@domain.com>
