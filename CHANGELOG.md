@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/marooncap/k3s-ansible/compare/v1.4.0...v1.4.1) (2026-09-29)
+
+
+### Bug Fixes
+
+* prevent changes ([#7](https://github.com/marooncap/k3s-ansible/issues/7)) ([f7076ea](https://github.com/marooncap/k3s-ansible/commit/f7076ea177ce5db3f241cfa1470cb731a84f6cff))
+* release me ([#8](https://github.com/marooncap/k3s-ansible/issues/8)) ([bedbde5](https://github.com/marooncap/k3s-ansible/commit/bedbde5e974d04113755115b5c4127de1a222e28))
+
 ## [1.4.0](https://github.com/marooncap/k3s-ansible/compare/v1.3.1...v1.4.0) (2026-09-18)
 
 
