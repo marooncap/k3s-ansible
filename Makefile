@@ -9,16 +9,17 @@ REQS ?= requirements.txt
 PYTHON_SYS ?= python3.11
 PYTHON ?= $(VENV)/bin/python3
 PRE_COMMIT ?= $(VENV)/bin/pre-commit
+GALAXY ?= $(VENV)/bin/ansible-galaxy
 
 .PHONY: ci
 ci: $(VENV)
-	$(PRE_COMMIT) run --all-files
+	unset ANSIBLE_VAULT_IDENTITY_LIST && $(PRE_COMMIT) run --all-files
 
 .PHONY: init
 init: $(VENV)
 	$(PRE_COMMIT) install
 	$(PRE_COMMIT) install-hooks
-	$(PYTHON) -m ansible-galaxy collection install -r collections/requirements.yml
+	$(GALAXY) collection install -r collections/requirements.yml
 
 .PHONY: bump-pip
 bump-pip:
