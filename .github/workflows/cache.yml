@@ -5,7 +5,7 @@ on:
 jobs:
   molecule:
     name: cache
-    runs-on: [self-hosted, linux, x64, k3s-ci, virtualbox, nested-virt, ubuntu-latest]
+    runs-on: ubuntu-latest
     env:
       PYTHON_VERSION: "3.11"
       VAGRANT_DEFAULT_PROVIDER: virtualbox

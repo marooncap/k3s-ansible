@@ -1,29 +1,36 @@
 .SILENT:
 
 VENV = venv
-CLEAN_DIRS := .ansible venv
+CLEAN_DIRS := .ansible $(VENV)
 
 REQS_IN ?= requirements.in
 REQS ?= requirements.txt
 
 PYTHON_SYS ?= python3.11
 PYTHON ?= $(VENV)/bin/python3
+PRE_COMMIT ?= $(VENV)/bin/pre-commit
 
+.PHONY: ci
+ci: $(VENV)
+	$(PRE_COMMIT) run --all-files
+
+.PHONY: init
 init: $(VENV)
-	$(PYTHON) -m pre-commit install
-	$(PYTHON) -m pre-commit install-hooks
+	$(PRE_COMMIT) install
+	$(PRE_COMMIT) install-hooks
 	$(PYTHON) -m ansible-galaxy collection install -r collections/requirements.yml
 
+.PHONY: bump-pip
 bump-pip:
 	$(PYTHON) -m pip-compile $(REQS_IN)
 
-refresh:
-	rm -rf $(CLEAN_DIRS)
-	$(MAKE) init
+.PHONY: refresh
+refresh: clean init
+
+.PHONY: clean
+clean:
+	rm -rf $(CLEAN_DIRS) || true
 
 $(VENV):
-	$(MAKE) venv
-
-venv:
 	$(PYTHON_SYS) -m venv $(VENV)
 	$(VENV)/bin/python3 -m pip install -r $(REQS) pip-tools==7.6.1
