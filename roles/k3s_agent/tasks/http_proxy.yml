@@ -15,4 +15,5 @@
     owner: root
     group: root
     mode: "0755"
+  notify: Restart k3s agent
   when: proxy_env is defined

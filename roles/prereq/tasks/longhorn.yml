@@ -55,16 +55,18 @@
     fail_msg: >-
       Expected open-iscsi.service and iscsid.service to exist after installing open-iscsi.
 
-- name: Ensure iSCSI services are enabled and started
-  ansible.builtin.systemd:
-    name: "{{ item }}"
+- name: Ensure open-iscsi is enabled
+  ansible.builtin.systemd_service:
+    name: open-iscsi.service
+    enabled: true
+
+- name: Ensure iSCSI daemon is enabled and running
+  ansible.builtin.systemd_service:
+    name: iscsid.service
     enabled: true
     state: started
-  loop:
-    - iscsid
-    - open-iscsi
 
-- name: Refresh service facts after starting iSCSI
+- name: Refresh service facts after configuring iSCSI
   ansible.builtin.service_facts:
 
 - name: Validate iSCSI services are configured correctly

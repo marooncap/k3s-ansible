@@ -7,6 +7,7 @@ if [[ ! -f /etc/os-release ]]; then
   exit 1
 fi
 
+# shellcheck disable=SC1091,SC2086
 . /etc/os-release
 
 if ! command -v vagrant >/dev/null 2>&1; then
@@ -30,6 +31,7 @@ if ! command -v vagrant >/dev/null 2>&1; then
   fi
 
   if [[ ! -f /etc/apt/sources.list.d/hashicorp.list ]]; then
+    # shellcheck disable=SC1091,SC2086
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] \
     https://apt.releases.hashicorp.com $(. /etc/os-release && echo ${UBUNTU_CODENAME:-$(lsb_release -cs)}) main" |
       sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
