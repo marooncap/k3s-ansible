@@ -141,6 +141,8 @@
     remote_src: true
     owner: "{{ ansible_user_id }}"
     mode: u=rw,g=,o=
+    # the endpoint is rewritten below, so only seed the file; overwriting it would always report changed
+    force: false
 
 - name: Read current kubectl cluster endpoint
   ansible.builtin.command: >-

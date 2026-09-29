@@ -27,6 +27,8 @@
     group: root
     mode: "0644"
   when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
+  # get_url never writes its temp file in check mode, so it always reports changed; the target is a scratch dir
+  check_mode: false
 
 - name: Apply custom kustomize patches to the longhorn manifest
   when:
@@ -44,10 +46,7 @@
 
     - name: Copy downloaded longhorn manifest into kustomize working directory
       ansible.builtin.copy:
-        src: >-
-          {{ '/var/lib/rancher/k3s/server/manifests/longhorn.yaml'
-             if ansible_check_mode else
-             '/var/lib/rancher/k3s/server/tmp-manifests/longhorn-upstream.yaml' }}
+        src: /var/lib/rancher/k3s/server/tmp-manifests/longhorn-upstream.yaml
         dest: /var/lib/rancher/k3s/server/tmp-manifests/longhorn-kustomize/longhorn.yaml
         remote_src: true
         owner: root
