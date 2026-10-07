@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/marooncap/k3s-ansible/compare/v1.4.2...v1.4.3) (2026-10-07)
+
+
+### Bug Fixes
+
+* add missing longhorn crds ([#12](https://github.com/marooncap/k3s-ansible/issues/12)) ([73bf463](https://github.com/marooncap/k3s-ansible/commit/73bf463520637d5fe4bab06486db564cab99f159))
+
 ## [1.4.2](https://github.com/marooncap/k3s-ansible/compare/v1.4.1...v1.4.2) (2026-09-29)
 
 
