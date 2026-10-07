@@ -33,7 +33,7 @@
 - name: Download CSI snapshot CRD manifests to first master
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/{{ longhorn_csi_snapshotter_crd_version }}/client/config/crd/snapshot.storage.k8s.io_{{ item }}.yaml # noqa yaml[line-length]
-    dest: /var/lib/rancher/k3s/server/manifests/snapshot.storage.k8s.io_{{ item }}.yaml
+    dest: /var/lib/rancher/k3s/server/manifests/csi-snapshot-crd-{{ item }}.yaml
     owner: root
     group: root
     mode: "0644"
