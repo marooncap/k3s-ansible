@@ -116,6 +116,10 @@ longhorn_enabled: false
 # tag for longhorn manager manifest
 # longhorn_manager_tag_version: "master"
 
+# external-snapshotter release the CSI snapshot CRDs are downloaded from; longhorn's
+# csi-snapshotter sidecar needs them and K3s does not ship them
+# longhorn_csi_snapshotter_crd_version: "v8.6.0"
+
 # Arbitrary kustomize patches applied to the downloaded longhorn.yaml manifest before
 # it's deployed, so you're not limited to any one setting. Each item follows kustomize's
 # own "patches" schema (a `target` selector plus either a strategic-merge or JSON6902
