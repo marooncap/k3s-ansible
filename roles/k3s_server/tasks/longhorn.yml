@@ -30,6 +30,16 @@
   # get_url never writes its temp file in check mode, so it always reports changed; the target is a scratch dir
   check_mode: false
 
+- name: Download CSI snapshot CRD manifests to first master
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/{{ longhorn_csi_snapshotter_crd_version }}/client/config/crd/snapshot.storage.k8s.io_{{ item }}.yaml # noqa yaml[line-length]
+    dest: /var/lib/rancher/k3s/server/manifests/csi-snapshot-crd-{{ item }}.yaml
+    owner: root
+    group: root
+    mode: "0644"
+  loop: "{{ longhorn_csi_snapshot_crds }}"
+  when: ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
+
 - name: Apply custom kustomize patches to the longhorn manifest
   when:
     - ansible_hostname == hostvars[groups[group_name_master | default('master')][0]]['ansible_hostname']
